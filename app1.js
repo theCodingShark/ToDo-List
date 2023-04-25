@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const _ = require("lodash");
 
+require("dotenv").config();
 
 const app = express();
 
@@ -13,8 +14,10 @@ app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
 
+const dbuser = process.env.DB_USER;
+const dbpass = process.env.DB_PASS;
 
-mongoose.connect("mongodb+srv://admin-swyam:myTestDatabase@cluster0.ucmfhbg.mongodb.net/todolistDB", {useNewUrlParser: true});
+mongoose.connect("mongodb+srv://"+ dbuser +":"+ dbpass +"@cluster0.ucmfhbg.mongodb.net/todolistDB", {useNewUrlParser: true, useUnifiedTopology: true});
 
 const itemsSchema = {
     name: String
@@ -139,6 +142,14 @@ if(port == null || port == "") {
     port = 3000;
 }
 
-app.listen(port, function() {
+// app.listen(port, function() {
+//     console.log("Server has started successfully.");
+// });
+
+
+mongoose.connect("mongodb+srv://admin-swyam:myTestDatabase@cluster0.ucmfhbg.mongodb.net/todolistDB").then(
+    app.listen(port, function() {
     console.log("Server has started successfully.");
-});
+})
+);
+
